@@ -22,10 +22,9 @@ const template = `<?xml version='1.0' encoding='utf-8'?>
 </html>`;
 
 export default function chapterTemplate(
-    current: VolumeToCType,
-    meta: VolumeMetaSchemaType,
-    content: string,
-    filename: string,
+  meta: VolumeMetaSchemaType,
+  content: string,
+  filename: string,
 ): string {
   const title = meta.title;
   const templateContent = template

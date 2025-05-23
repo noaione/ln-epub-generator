@@ -1,8 +1,8 @@
 import type { Element as HastElement } from 'hast';
-import { h } from "hastscript";
-import type { ProjectMetaSchemaType, VolumeMetaSchemaType } from "./schema";
+import { h } from 'hastscript';
+import type { ProjectMetaSchemaType, VolumeMetaSchemaType } from './schema';
 import { hastToHtmlRaw } from './markdown';
-import crypto from 'node:crypto'
+import crypto from 'node:crypto';
 
 const templateCover = `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
@@ -99,7 +99,6 @@ export type MetaToC = {
   landmark?: string;
 };
 
-
 function roleWithName(role: ProjectMetaSchemaType['teams'][number]['role'], name: string) {
   switch (role) {
     case 'translator':
@@ -129,9 +128,7 @@ function getCompilationDate() {
   return intlDate;
 }
 
-export function autogenCover(
-  meta: VolumeMetaSchemaType,
-): string {
+export function autogenCover(meta: VolumeMetaSchemaType): string {
   return templateCover.replace(/{{filename}}/g, meta.cover);
 }
 
@@ -159,18 +156,15 @@ export function autogenToC(
               href: `../Text/${item.filename}`,
             },
             [item.title],
-          )
-        ]
-      )
-    })
+          ),
+        ],
+      );
+    }),
   );
 
   const html = hastToHtmlRaw({
     type: 'root',
-    children: [
-      h('h1', {class: 'toc-title'}, [title]),
-      hNode,
-    ],
+    children: [h('h1', { class: 'toc-title' }, [title]), hNode],
   });
 
   let landmarkContents = '';
@@ -184,11 +178,11 @@ export function autogenToC(
       },
       [
         h('h1', {}, ['Landmarks']),
-        h('ol', {}, landmarkItems.map((item) => {
-          return h(
-            'li',
-            {},
-            [
+        h(
+          'ol',
+          {},
+          landmarkItems.map((item) => {
+            return h('li', {}, [
               h(
                 'a',
                 {
@@ -196,12 +190,12 @@ export function autogenToC(
                   'epub:type': item.landmark!,
                 },
                 [item.title],
-              )
-            ]
-          )
-        }))
-      ]
-    )
+              ),
+            ]);
+          }),
+        ),
+      ],
+    );
     landmarkContents = hastToHtmlRaw({
       type: 'root',
       children: [landmarkHast],
@@ -214,15 +208,10 @@ export function autogenToC(
     .replace(/{{landmarkContents}}/g, landmarkContents);
 }
 
-export function autogenAboutRelease(
-  project: ProjectMetaSchemaType,
-  volume: VolumeMetaSchemaType,
-): string {
+export function autogenAboutRelease(project: ProjectMetaSchemaType, volume: VolumeMetaSchemaType): string {
   const root = h();
 
-  root.children = [
-    h('h1', ['About this Release']),
-  ];
+  root.children = [h('h1', ['About this Release'])];
   if (project.translator.image) {
     root.children.push(
       h('p', [
@@ -230,12 +219,12 @@ export function autogenAboutRelease(
           src: project.translator.image,
           class: 'credit-icon',
           alt: project.translator.name,
-        })
-      ])
+        }),
+      ]),
     );
   }
   root.children.push(
-    h('p', {class: 'section-break'}, [volume.title]),
+    h('p', { class: 'section-break' }, [volume.title]),
     h('p', [`by ${project.author.writer}`]),
   );
   // Teams list
@@ -243,7 +232,7 @@ export function autogenAboutRelease(
     project.teams.forEach((team, index) => {
       const textData = roleWithName(team.role, team.name);
       if (index === 0) {
-        root.children.push(h('p', {class: 'section-break'}, [textData]));
+        root.children.push(h('p', { class: 'section-break' }, [textData]));
       } else {
         root.children.push(h('p', [textData]));
       }
@@ -252,39 +241,41 @@ export function autogenAboutRelease(
 
   // Author info
   root.children.push(
-    h('p', {class: 'section-break'}, [`Copyright © ${volume.year} ${project.author.writer}`]),
+    h('p', { class: 'section-break' }, [`Copyright © ${volume.year} ${project.author.writer}`]),
   );
   if (project.author.illustrator) {
-    root.children.push(
-      h('p', [`Illustrated by ${project.author.illustrator}`]),
-    );
+    root.children.push(h('p', [`Illustrated by ${project.author.illustrator}`]));
   }
 
   // Publisher info
   root.children.push(
-    h('p', {class: 'section-break'}, [`First published in ${project.publisher.country} in ${volume.year} by ${project.publisher.name}`]),
-    h('p', {class: 'section-break'}, ['All rights reserved.']),
+    h('p', { class: 'section-break' }, [
+      `First published in ${project.publisher.country} in ${volume.year} by ${project.publisher.name}`,
+    ]),
+    h('p', { class: 'section-break' }, ['All rights reserved.']),
   );
 
   // Translator site info
-  root.children.push(
-    h('p', {class: 'section-break'}, [project.translator.name]),
-  );
+  root.children.push(h('p', { class: 'section-break' }, [project.translator.name]));
   if (project.translator.url) {
     const url = new URL(project.translator.url);
     const hostname = url.hostname.replace(/^www\./, '');
     root.children.push(
       h('p', [
-        h('a', {
-          href: project.translator.url,
-        }, [hostname])
-      ])
+        h(
+          'a',
+          {
+            href: project.translator.url,
+          },
+          [hostname],
+        ),
+      ]),
     );
   }
 
   // Compiler info
   root.children.push(
-    h('p', {class: 'section-break'}, [`A compilation project by ${project.compiler.name}`]),
+    h('p', { class: 'section-break' }, [`A compilation project by ${project.compiler.name}`]),
   );
   if (project.compiler.url) {
     const url = new URL(project.compiler.url);
@@ -294,13 +285,17 @@ export function autogenAboutRelease(
     const preferStub = pathname.trim().length > 0 ? pathname.trim() : hostname.trim();
     root.children.push(
       h('p', [
-        h('a', {
-          href: project.compiler.url,
-        }, [preferStub])
-      ])
+        h(
+          'a',
+          {
+            href: project.compiler.url,
+          },
+          [preferStub],
+        ),
+      ]),
     );
   }
-  
+
   root.children.push(
     h('p', [`Version ${volume.version}, compiled on ${getCompilationDate()}`]),
     h('br'),
@@ -309,32 +304,19 @@ export function autogenAboutRelease(
   );
 
   const hastHtml = hastToHtmlRaw(root);
-  return templateAboutRelease
-    .replace(/{{title}}/g, volume.title)
-    .replace(/{{content}}/g, hastHtml);
+  return templateAboutRelease.replace(/{{title}}/g, volume.title).replace(/{{content}}/g, hastHtml);
 }
 
-export function autogenFootnotes(
-  footnotes: HastElement[],
-  meta: VolumeMetaSchemaType,
-): string {
+export function autogenFootnotes(footnotes: HastElement[], meta: VolumeMetaSchemaType): string {
   const html = hastToHtmlRaw({
     type: 'root',
-    children: [
-      h('h1', {class: 'toc-title'}, ['Translation Notes']),
-      ...footnotes,
-    ],
+    children: [h('h1', { class: 'toc-title' }, ['Translation Notes']), ...footnotes],
   });
 
-  return templateFootnotes
-    .replace(/{{title}}/g, meta.title)
-    .replace(/{{content}}/g, html);
+  return templateFootnotes.replace(/{{title}}/g, meta.title).replace(/{{content}}/g, html);
 }
 
-export function autogenNcxFile(
-  meta: VolumeMetaSchemaType,
-  tocs: MetaToC[],
-): string {
+export function autogenNcxFile(meta: VolumeMetaSchemaType, tocs: MetaToC[]): string {
   const hNodes = tocs.map((item, index) => {
     return h(
       'navPoint',
@@ -342,18 +324,13 @@ export function autogenNcxFile(
         id: `navPoint${index + 1}`,
         playOrder: (index + 1).toString(),
       },
-      [
-        h('navLabel', {}, [h('text', {}, [item.title])]),
-        h('content', {src: `Text/${item.filename}`}),
-      ],
-    )
+      [h('navLabel', {}, [h('text', {}, [item.title])]), h('content', { src: `Text/${item.filename}` })],
+    );
   });
 
   const html = hastToHtmlRaw({
     type: 'root',
-    children: [
-      h('navMap', {}, hNodes),
-    ],
+    children: [h('navMap', {}, hNodes)],
   });
 
   const htmlFixup = html
@@ -362,7 +339,7 @@ export function autogenNcxFile(
     .replace(/<navmap/g, '<navMap')
     .replace(/<\/navpoint/g, '</navPoint')
     .replace(/<\/navlabel/g, '</navLabel')
-    .replace(/<\/navmap/g, '</navMap')
+    .replace(/<\/navmap/g, '</navMap');
 
   return templateNcx
     .replace(/{{title}}/g, meta.title)
@@ -377,10 +354,8 @@ export function autogenAuthorSign() {
       style: 'text-align: right; margin-right: 20pt;',
       class: 'section-break',
     },
-    [
-      h('strong', {}, ['Toudai']),
-    ],
-  )
+    [h('strong', {}, ['Toudai'])],
+  );
 }
 
 export function generateXHash() {

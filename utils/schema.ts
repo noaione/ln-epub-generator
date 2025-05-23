@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
-const TemplateSupport = z.enum(['toc-simple', 'footnotes', 'images', 'cover', 'chapter', 'afterword', 'about-rls']).default('chapter');
+const TemplateSupport = z
+  .enum(['toc-simple', 'footnotes', 'images', 'cover', 'chapter', 'afterword', 'about-rls'])
+  .default('chapter');
 const TocType = z.enum(['frontmatter', 'chapter', 'backmatter']);
 const NumberingType = z.enum(['padzero', 'underscore']).default('underscore');
 
@@ -60,10 +62,12 @@ const ProjectMetaSchema = z.object({
     name: z.string(),
     url: z.string().url().optional(),
   }),
-  teams: z.array(z.object({
-    name: z.string(),
-    role: z.enum(['translator', 'proofreader', 'editor', 'lettering', 'designer', 'quality-checker']),
-  })),
+  teams: z.array(
+    z.object({
+      name: z.string(),
+      role: z.enum(['translator', 'proofreader', 'editor', 'lettering', 'designer', 'quality-checker']),
+    }),
+  ),
 });
 
 export type VolumeToCType = z.infer<typeof VolumeToC>;

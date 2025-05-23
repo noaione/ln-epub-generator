@@ -22,37 +22,37 @@ img {
 }
 
 img.cover {
-  text-indent: 0em; 
-  max-height: 98%; 
-  width: auto !important; 
-  clear: both; 
+  text-indent: 0em;
+  max-height: 98%;
+  width: auto !important;
+  clear: both;
 }
 
 img.insert {
-  max-height: 98%; 
-  width: auto !important; 
-  clear: both; 
-  page-break-inside: avoid; 
+  max-height: 98%;
+  width: auto !important;
+  clear: both;
+  page-break-inside: avoid;
   overflow: hidden;
 }
 
 .chibi {
-  clear: both; 
-  page-break-inside: avoid; 
+  clear: both;
+  page-break-inside: avoid;
   overflow: hidden;
   text-align: right;
 }
 
 .chibi img {
-  width: 240px; 
+  width: 240px;
 }
 
-.main { 
-  font-weight: normal; 
-  letter-spacing: 0; 
-  orphans: 1; 
-  widows: 1; 
-  word-spacing: 0; 
+.main {
+  font-weight: normal;
+  letter-spacing: 0;
+  orphans: 1;
+  widows: 1;
+  word-spacing: 0;
 }
 
 p {
@@ -156,7 +156,7 @@ h1 {
 h2 {
   font-size: 1.15em;
   margin-top: 1.5em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   line-height: 1.2em;
 }
 
@@ -172,10 +172,17 @@ tr td {
   padding: 0.2em;
 }
 
-nav[hidden], ol[hidden] {
-  display: none; visibility: hidden;
+nav[hidden],
+ol[hidden] {
+  display: none;
+  visibility: hidden;
 }
-.disclaimer-rw {font-size: 0.7em; text-indent: 0; text-align: center !important; margin-top: 1.5em; }
+.disclaimer-rw {
+  font-size: 0.7em;
+  text-indent: 0;
+  text-align: center !important;
+  margin-top: 1.5em;
+}
 
 sup {
   vertical-align: super;
@@ -220,12 +227,13 @@ h1.toc-title {
 }
 
 ol.none {
-  list-style-type:none;
-  margin: 0; padding: 0;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 code {
-  font-family: Consolas, "courier new", monospace;
+  font-family: Consolas, 'courier new', monospace;
 }
 
 img.gaiji {

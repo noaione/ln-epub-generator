@@ -1,11 +1,33 @@
 import type { Element as HastElement } from 'hast';
-import { basename, dirname, extname, join } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { exists, lstat, mkdir, readdir, readFile } from 'node:fs/promises'
-import { ProjectMetaSchema, VolumeMetaSchema, type ProjectMetaSchemaType, type VolumeFrontmatterType } from './utils/schema'
-import { extractFrontmatter, fromMarkdownToMdast, hastToHtml, mdastToHast, prettifyHtml, prettifyXml, splitContentAtImage } from './utils/markdown';
+import { basename, dirname, extname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { exists, lstat, mkdir, readdir, readFile } from 'node:fs/promises';
+import {
+  ProjectMetaSchema,
+  VolumeMetaSchema,
+  type ProjectMetaSchemaType,
+  type VolumeFrontmatterType,
+} from './utils/schema';
+import {
+  extractFrontmatter,
+  fromMarkdownToMdast,
+  hastToHtml,
+  mdastToHast,
+  prettifyHtml,
+  prettifyXml,
+  splitContentAtImage,
+} from './utils/markdown';
 import { Epub } from '@smoores/epub';
-import { autogenAboutRelease, autogenAuthorSign, autogenCover, autogenFootnotes, autogenNcxFile, autogenToC, generateXHash, type MetaToC } from './utils/autogen';
+import {
+  autogenAboutRelease,
+  autogenAuthorSign,
+  autogenCover,
+  autogenFootnotes,
+  autogenNcxFile,
+  autogenToC,
+  generateXHash,
+  type MetaToC,
+} from './utils/autogen';
 
 const baseDir = fileURLToPath(dirname(import.meta.url));
 const sourcesFolders = join(baseDir, 'sources');
@@ -36,14 +58,14 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
   const metaFile = await readFile(metaJson, {
     encoding: 'utf-8',
   });
-  
+
   const meta = await VolumeMetaSchema.parseAsync(JSON.parse(metaFile));
   console.log(`-- Loading: ${meta.title}`);
 
   const locale = new Intl.Locale('en-US');
   locale.textInfo = {
     direction: 'ltr',
-  }
+  };
   const epub = await Epub.create({
     title: meta.title,
     language: locale,
@@ -78,10 +100,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
   if (!(await exists(coverPath))) {
     throw new Error(`Cover image does not exist: ${coverPath}`);
   }
-  await epub.setCoverImage(
-    `Images/${basename(coverPath)}`,
-    await readFile(coverPath),
-  );
+  await epub.setCoverImage(`Images/${basename(coverPath)}`, await readFile(coverPath));
 
   // Add styles
   await epub.addManifestItem(
@@ -91,7 +110,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
       mediaType: 'text/css',
     },
     await readFile(join(baseDir, 'common', 'styles.css')),
-  )
+  );
 
   // Import all images
   const imageFiles = await readdir(baseImageFolder);
@@ -122,7 +141,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
   const tocMetaMappings: Record<string, VolumeFrontmatterType> = {};
 
   let rawFootnotesCounter = 1;
-  const tocFootnotesCounter: Record<string, { n: number, fn: string, content: HastElement | null }> = {};
+  const tocFootnotesCounter: Record<string, { n: number; fn: string; content: HastElement | null }> = {};
   let tocFileMeta;
   let footnotesFileMeta;
 
@@ -139,7 +158,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
     const footNotesReferences = (label: string, filename: string) => {
       const current = rawFootnotesCounter;
       if (tocFootnotesCounter[label]) {
-        return {n: tocFootnotesCounter[label].n, fn: tocFootnotesCounter[label].fn};
+        return { n: tocFootnotesCounter[label].n, fn: tocFootnotesCounter[label].fn };
       }
 
       rawFootnotesCounter++;
@@ -152,13 +171,13 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
         n: current,
         fn: filename,
       };
-    }
+    };
 
     const footNotesDefinition = (label: string, hastNode: HastElement) => {
       if (tocFootnotesCounter[label]) {
         tocFootnotesCounter[label].content = hastNode;
       }
-    }
+    };
 
     // Process the ToC content here
     console.log(` --]> Processing ToC: ${toc.title}`);
@@ -177,7 +196,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
             mediaType: 'application/xhtml+xml',
           },
           coverFile,
-          "utf-8",
+          'utf-8',
         );
         bookSpines[toc.filename] = {
           filename: `cover.xhtml`,
@@ -214,7 +233,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
             mediaType: 'application/xhtml+xml',
           },
           aboutRlsFile,
-          "utf-8",
+          'utf-8',
         );
         bookSpines[toc.filename] = {
           filename: newFilename,
@@ -225,7 +244,12 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
         break;
       }
       case 'afterword': {
-        const afterwordFile = mdastToHast(markdownParsed, newFilename, footNotesReferences, footNotesDefinition);
+        const afterwordFile = mdastToHast(
+          markdownParsed,
+          newFilename,
+          footNotesReferences,
+          footNotesDefinition,
+        );
         // Append new thing to the end of the file
         if (afterwordFile.type === 'root') {
           afterwordFile.children.push(autogenAuthorSign());
@@ -257,7 +281,10 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
           const split = splitByImages[i]!;
           let justName = newFilename.replace(/\.xhtml$/, '');
           if (splitByImages.length > 1) {
-            justName = toc.numbering === 'padzero' ? `${justName}${String(i + 1).padStart(2, '0')}` : `${justName}_${i + 1}`;
+            justName =
+              toc.numbering === 'padzero'
+                ? `${justName}${String(i + 1).padStart(2, '0')}`
+                : `${justName}_${i + 1}`;
           }
 
           if (i === 0 && compiled.meta.toc) {
@@ -269,7 +296,9 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
           }
 
           const extracted = mdastToHast(split, justName, footNotesReferences, footNotesDefinition);
-          const html = await prettifyHtml(hastToHtml(extracted, justName, split.fullImage ? 'insert' : 'chapter', toc, meta));
+          const html = await prettifyHtml(
+            hastToHtml(extracted, justName, split.fullImage ? 'insert' : 'chapter', toc, meta),
+          );
 
           await epub.addManifestItem(
             {
@@ -332,9 +361,11 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
       landmark: tocFileMeta.landmark,
     };
   }
-  
+
   // Generate footnotes
-  const footnotesItems = Object.values(tocFootnotesCounter).map((item) => item.content).filter((item) => item !== null && item !== undefined) as HastElement[];
+  const footnotesItems = Object.values(tocFootnotesCounter)
+    .map((item) => item.content)
+    .filter((item) => item !== null && item !== undefined) as HastElement[];
   if (footnotesFileMeta && footnotesItems.length > 0) {
     console.log(` --]> Generating footnotes: ${footnotesFileMeta.title}`);
     const footnotesFile = await prettifyHtml(autogenFootnotes(footnotesItems, meta));
@@ -434,7 +465,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
     properties: {
       property: 'identifier-type',
       refines: '#pub-id',
-      scheme: 'onix:codelist5'
+      scheme: 'onix:codelist5',
     },
     value: '15',
   });
@@ -477,15 +508,16 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
       content: generateXHash(),
     },
     value: '',
-  })
+  });
 
   console.log(` --]> Unmangling issues with package metadata`);
   // @ts-expect-error - internal stuff
   await epub.withPackageDocument((pkgDoc) => {
-    const packageElement = Epub.findXmlChildByName("package", pkgDoc);
-    if (!packageElement) throw new Error("Failed to parse EPUB: Found no package element in package document");
-    const spine = Epub.findXmlChildByName("spine", packageElement["package"]);
-    if (!spine) throw new Error("Failed to parse EPUB: Found no spine element in package document");
+    const packageElement = Epub.findXmlChildByName('package', pkgDoc);
+    if (!packageElement)
+      throw new Error('Failed to parse EPUB: Found no package element in package document');
+    const spine = Epub.findXmlChildByName('spine', packageElement['package']);
+    if (!spine) throw new Error('Failed to parse EPUB: Found no spine element in package document');
     spine[':@'] = {
       '@_toc': 'toc.ncx',
     };
@@ -500,23 +532,31 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
     }
 
     // Add the guide element
-    const landmarksItems = Object.values(bookSpines).map((data) => Array.isArray(data) ? data[0] : data).filter((item) =>  item?.landmark);
+    const landmarksItems = Object.values(bookSpines)
+      .map((data) => (Array.isArray(data) ? data[0] : data))
+      .filter((item) => item?.landmark);
     if (landmarksItems.length > 0) {
-      const guide = Epub.createXmlElement("guide", {}, landmarksItems.map((item) => {
-        if (!item) {
-          return null;
-        }
-        const guideLandmark = item.landmark!.replace('backmatter', 'other.backmatter');
-        return Epub.createXmlElement("reference", {
-          type: guideLandmark,
-          title: item.title,
-          href: `Text/${item.filename}`,
-        });
-      }).filter((item) => item !== null));
+      const guide = Epub.createXmlElement(
+        'guide',
+        {},
+        landmarksItems
+          .map((item) => {
+            if (!item) {
+              return null;
+            }
+            const guideLandmark = item.landmark!.replace('backmatter', 'other.backmatter');
+            return Epub.createXmlElement('reference', {
+              type: guideLandmark,
+              title: item.title,
+              href: `Text/${item.filename}`,
+            });
+          })
+          .filter((item) => item !== null),
+      );
       packageElement['package'].push(guide);
     }
 
-    const metadataElement = Epub.findXmlChildByName("metadata", packageElement["package"]);
+    const metadataElement = Epub.findXmlChildByName('metadata', packageElement['package']);
     // Add some metadata that got fucked
     metadataElement![':@'] = metadataElement![':@'] ?? {};
     metadataElement![':@']['@_xmlns:dc'] = 'http://purl.org/dc/elements/1.1/';
@@ -544,7 +584,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
           },
           [Epub.createXmlTextNode(`${i + 1}`)],
         ),
-      )
+      );
     }
   });
 
