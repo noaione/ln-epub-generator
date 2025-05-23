@@ -1,0 +1,11 @@
+.vscode/**
+tsconfig.json
+package.json
+bun.lock
+.prettierrc
+
+patches/**
+_Final/**
+
+*.html
+*.xhtml
