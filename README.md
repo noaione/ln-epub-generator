@@ -101,7 +101,8 @@ For the `meta.json` file, you can see this schema:
             "title": "Prologue",
             "type": "chapter",
             "filename": "chapter0.md",
-            "landmark": "bodymatter"
+            "landmark": "bodymatter",
+            "break": true // Optional, used to add margin-top for this item
         },
         {
             "title": "Translation Notes",
@@ -124,6 +125,7 @@ Each markdown file can have a frontmatter section at the top, like this:
 template: cover
 numbering: padzero
 toc: false
+break: false
 ---
 ```
 

@@ -13,6 +13,7 @@ const VolumeToC = z.strictObject({
   landmark: z.string().optional(),
   numbering: NumberingType.optional(),
   optional: z.boolean().default(false),
+  break: z.boolean().default(false),
 });
 
 const VolumeMetaSchema = z.strictObject({
