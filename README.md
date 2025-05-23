@@ -41,7 +41,7 @@ This is your project `meta.json` file:
     "translator": {
         "name": "Translator Group", // Required
         "url": "https://translator-website.com", // Optional
-        "image": null // Optional
+        "image": null // Optional, this must be relative to the root directory of the project
     },
     "compiler": {
         "name": "Compiler Name", // Required

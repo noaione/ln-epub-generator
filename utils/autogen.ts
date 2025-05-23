@@ -3,6 +3,7 @@ import { h } from 'hastscript';
 import type { ProjectMetaSchemaType, VolumeMetaSchemaType } from './schema';
 import { hastToHtmlRaw } from './markdown';
 import crypto from 'node:crypto';
+import { basename } from 'node:path';
 
 const templateCover = `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
@@ -211,22 +212,12 @@ export function autogenToC(
 export function autogenColophon(project: ProjectMetaSchemaType, volume: VolumeMetaSchemaType): string {
   const root = h();
 
-  root.children = [h('h1', ['Colophon'])];
-  if (project.translator.image) {
-    root.children.push(
-      h('p', [
-        h('img', {
-          src: project.translator.image,
-          class: 'credit-icon',
-          alt: project.translator.name,
-        }),
-      ]),
-    );
-  }
-  root.children.push(
+  root.children = [
+    h('h1', ['Colophon']),
     h('p', { class: 'section-break' }, [volume.title]),
     h('p', [`by ${project.author.writer}`]),
-  );
+  ];
+
   // Teams list
   if (project.teams.length > 0) {
     project.teams.forEach((team, index) => {
@@ -269,6 +260,17 @@ export function autogenColophon(project: ProjectMetaSchemaType, volume: VolumeMe
           },
           [hostname],
         ),
+      ]),
+    );
+  }
+  if (project.translator.image) {
+    root.children.push(
+      h('p', [
+        h('img', {
+          src: `../Images/credit-icon-${basename(project.translator.image)}`,
+          class: 'credit-icon',
+          alt: project.translator.name,
+        }),
       ]),
     );
   }
