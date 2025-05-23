@@ -40,16 +40,5 @@
   },
   "patchedDependencies": {
     "@smoores/epub@0.1.9": "patches/@smoores%2Fepub@0.1.9.patch"
-  },
-  "prettier": {
-    "plugins": [
-      "@prettier/plugin-xml"
-    ],
-    "xmlWhitespaceSensitivity": "ignore",
-    "xmlSelfClosingSpace": false,
-    "xmlFormatAttributes": true,
-    "xmlFormatAttributesOnSameLine": false,
-    "xmlFormatEmptyElements": true,
-    "xmlFormatTextContent": true
   }
 }

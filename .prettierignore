@@ -9,3 +9,13 @@ _Final/**
 
 *.html
 *.xhtml
+
+*.epub
+*.mobi
+*.pdf
+*.epub3
+*.azw3
+*.azw
+
+README.md
+LICENSE

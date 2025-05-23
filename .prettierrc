@@ -15,6 +15,15 @@
                 "singleQuote": false,
                 "tabWidth": 2
             }
+        },
+        {
+            "files": "*.css",
+            "options": {
+                "parser": "css",
+                "proseWrap": "never",
+                "printWidth": 10000,
+                "semi": true
+            }
         }
     ]
 }

@@ -228,7 +228,7 @@ You can also NOT split the file by adding `#nosplit` at the end of the image lin
 
 ## License
 
-This code is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+This code is licensed under the MIT License. See the [LICENSE-CODE](LICENSE-CODE) file for more information.
 
 ## Thanks!
 - [`smoores/epub`](https://www.npmjs.com/package/@smoores/epub) for the EPUB generation tooling
