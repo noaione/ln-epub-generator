@@ -24,6 +24,13 @@
                 "printWidth": 10000,
                 "semi": true
             }
+        },
+        {
+            "files": "*.json",
+            "options": {
+                "parser": "json",
+                "tabWidth": 4
+            }
         }
     ]
 }
