@@ -60,7 +60,7 @@ const templateSimpleToC = `<?xml version="1.0" encoding="utf-8"?>
 </html>
 `;
 
-const templateAboutRelease = `<?xml version="1.0" encoding="utf-8"?>
+const templateColophon = `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops"
       epub:prefix="z3998: http://www.daisy.org/z3998/2012/vocab/structure/#" lang="en" xml:lang="en">
@@ -208,10 +208,10 @@ export function autogenToC(
     .replace(/{{landmarkContents}}/g, landmarkContents);
 }
 
-export function autogenAboutRelease(project: ProjectMetaSchemaType, volume: VolumeMetaSchemaType): string {
+export function autogenColophon(project: ProjectMetaSchemaType, volume: VolumeMetaSchemaType): string {
   const root = h();
 
-  root.children = [h('h1', ['About this Release'])];
+  root.children = [h('h1', ['Colophon'])];
   if (project.translator.image) {
     root.children.push(
       h('p', [
@@ -304,7 +304,7 @@ export function autogenAboutRelease(project: ProjectMetaSchemaType, volume: Volu
   );
 
   const hastHtml = hastToHtmlRaw(root);
-  return templateAboutRelease.replace(/{{title}}/g, volume.title).replace(/{{content}}/g, hastHtml);
+  return templateColophon.replace(/{{title}}/g, volume.title).replace(/{{content}}/g, hastHtml);
 }
 
 export function autogenFootnotes(footnotes: HastElement[], meta: VolumeMetaSchemaType): string {

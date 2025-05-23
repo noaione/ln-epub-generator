@@ -110,9 +110,9 @@ For the `meta.json` file, you can see this schema:
             "optional": true // Optional, if the file is not found (or not auto-generated), it will be ignored
         },
         {
-            "title": "About this Release",
+            "title": "Colophon",
             "type": "backmatter",
-            "filename": "about-rls.md"
+            "filename": "colophon.md"
         }
     ]
 }
@@ -139,7 +139,7 @@ The following templates are available:
 - `chapter`: a normal chapter, default template.
 - `images`: similar to `chapter`, but mainly used for images collage (like illustration pages and such).
 - `afterword`: a special template for the afterword. This will add the author name at the end of the page automatically (on the right side).
-- `about-rls`: a special template for the about this release page.
+- `colophon`: a special template that will describe the book and the team that worked on it. This will automatically generated from the `meta.json` file.
 
 Also by default, the following templates are optional:
 - `footnotes`
@@ -161,7 +161,7 @@ The generator uses the lower-level libraries (`hast`, `mdast`, `micromark`, `uni
 We support the CommonMark spec with additional features:
 - Footnotes
 - Custom thematic break
-  We utilize `***` to automatically generate a custom thematic break.
+  We utilize `***`/`---` to automatically generate a custom thematic break.
 - Custom image link
 
 ### Footnotes
