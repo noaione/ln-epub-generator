@@ -19,10 +19,15 @@
             "optional": true
         },
         {
-            "title": "Prologue",
+            "title": "Chapter 1",
             "type": "chapter",
-            "filename": "chapter0.md",
+            "filename": "chapter1.md",
             "landmark": "bodymatter"
+        },
+        {
+            "title": "Afterword",
+            "type": "chapter",
+            "filename": "afterword.md"
         },
         {
             "title": "Translation Notes",
