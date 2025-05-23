@@ -185,8 +185,11 @@ export function splitContentAtImage(mdastRoot: MdastRoot): (MdastRoot & { fullIm
       const imageSrc = (child.children[0] as Image).url;
       // Check if this a no split
       const isNoSplit = Boolean(imageSrc.match(/\#nosplit$/));
-      if (!isNoSplit) {
-        // If no split, do nothing
+      if (isNoSplit) {
+        // If no split, remove the #nosplit from the src
+        (child.children[0] as Image).url = imageSrc.replace(/\#nosplit$/, '');
+      } else {
+        // If split, we need to split the children
         if (currentChildren.length > 0) {
           splitChildren.push({
             type: 'root',
