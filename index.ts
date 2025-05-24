@@ -206,6 +206,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
   let rawFootnotesCounter = 1;
   const tocFootnotesCounter: Record<string, { n: number; fn: string; content: HastElement | null }> = {};
   let tocFileMeta: MetaToC | undefined;
+  let navigationFileMeta: MetaToC | undefined;
   let footnotesFileMeta: MetaToC | undefined;
 
   for (const toc of meta.toc) {
@@ -282,6 +283,19 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
       }
       case 'footnotes': {
         footnotesFileMeta = {
+          filename: newFilename,
+          title: toc.title,
+          type: toc.type,
+          landmark: toc.landmark,
+          break: toc.break,
+        };
+        break;
+      }
+      case 'navigation': {
+        if (navigationFileMeta) {
+          throw new Error('Navigation file already exists: ' + navigationFileMeta.filename);
+        }
+        navigationFileMeta = {
           filename: newFilename,
           title: toc.title,
           type: toc.type,
@@ -458,6 +472,28 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
     };
   }
 
+  // Generate navigation file if requested the custom ones
+  if (navigationFileMeta) {
+    console.log(` --]> Generating navigation file: ${navigationFileMeta.title}`);
+    const navFile = await prettifyHtml(autogenToC(meta, navContents, navigationFileMeta.title));
+    await epub.addManifestItem(
+      {
+        id: navigationFileMeta.filename,
+        href: `Text/${navigationFileMeta.filename}`,
+        mediaType: 'application/xhtml+xml',
+      },
+      navFile,
+      'utf-8',
+    );
+    bookSpines[navigationFileMeta.filename] = {
+      filename: navigationFileMeta.filename,
+      title: navigationFileMeta.title,
+      type: navigationFileMeta.type,
+      landmark: navigationFileMeta.landmark,
+      break: navigationFileMeta.break,
+    };
+  }
+
   const navChildrenBase: MetaToC[] = [];
   const fullSpines: MetaToC[] = [];
   for (const toc of meta.toc) {
@@ -486,21 +522,23 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
 
   console.log(` --]> Generating full table of contents: ${meta.title}`);
   const fullNav = await prettifyHtml(autogenToC(meta, navChildrenBase, 'Table of Contents'));
-  await epub.addManifestItem(
-    {
-      id: 'navigation.xhtml',
-      href: 'Text/navigation.xhtml',
-      mediaType: 'application/xhtml+xml',
-      properties: ['nav'],
-    },
-    fullNav,
-    'utf-8',
-  );
-  fullSpines.push({
-    filename: 'navigation.xhtml',
-    title: 'Table of Contents',
-    type: 'backmatter',
-  });
+  if (!navigationFileMeta) {
+    await epub.addManifestItem(
+      {
+        id: 'navigation.xhtml',
+        href: 'Text/navigation.xhtml',
+        mediaType: 'application/xhtml+xml',
+        properties: ['nav'],
+      },
+      fullNav,
+      'utf-8',
+    );
+    fullSpines.push({
+      filename: 'navigation.xhtml',
+      title: 'Table of Contents',
+      type: 'backmatter',
+    });
+  }
 
   console.log(` --]> Generating spine items`);
   for (const nav of fullSpines) {
