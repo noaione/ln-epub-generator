@@ -527,9 +527,9 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
     }
   }
 
-  console.log(` --]> Generating full table of contents: ${meta.title}`);
-  const fullNav = await prettifyHtml(autogenToC(meta, navChildrenBase, 'Table of Contents'));
   if (!navigationFileMeta) {
+    console.log(` --]> Generating full table of contents: ${meta.title}`);
+    const fullNav = await prettifyHtml(autogenToC(meta, navChildrenBase, 'Table of Contents'));
     await epub.addManifestItem(
       {
         id: 'navigation.xhtml',
