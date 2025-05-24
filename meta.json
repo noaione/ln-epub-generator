@@ -2,6 +2,7 @@
     "title": "My EPUB Book",
     "publisher": {
         "name": "Original Publisher",
+        "full_name": null,
         "country": "Japan"
     },
     "author": {
