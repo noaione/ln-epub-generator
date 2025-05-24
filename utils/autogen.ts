@@ -356,14 +356,14 @@ export function autogenNcxFile(meta: VolumeMetaSchemaType, tocs: MetaToC[]): str
     .replace(/{{content}}/g, htmlFixup);
 }
 
-export function autogenAuthorSign() {
+export function autogenAuthorSign(authorName: string) {
   return h(
     'p',
     {
       style: 'text-align: right; margin-right: 20pt;',
       class: 'section-break',
     },
-    [h('strong', {}, ['Toudai'])],
+    [h('strong', {}, [authorName])],
   );
 }
 
