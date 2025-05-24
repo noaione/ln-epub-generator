@@ -41,7 +41,11 @@ if (!(await exists(finalFolder))) {
 
 function makeFileName(meta: ProjectMetaSchemaType, volumeNumber: number) {
   const paddedNumber = String(volumeNumber).padStart(2, '0');
-  return `${meta.title} v${paddedNumber} [${meta.publisher.name}] [${meta.translator.name}] [${meta.compiler.name}].epub`;
+  let baseName = `${meta.title} v${paddedNumber}`;
+  if (meta.publisher?.name) {
+    baseName += ` [${meta.publisher.name}]`;
+  }
+  return `${baseName} [${meta.translator.name}] [${meta.compiler.name}].epub`;
 }
 
 function coerceAuthorFileAs(originalName: string) {
