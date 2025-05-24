@@ -228,6 +228,24 @@ We also support adding a `#` at the end of the image link to add classes to the 
 
 You can also NOT split the file by adding `#nosplit` at the end of the image link.
 
+You can also try to split the chapter manually by adding the `<!-- /split -->` comment in the markdown file.
+
+This will do the same thing as the automatic splitting, but you can control where to split the file.
+
+```markdown
+# Chapter 1
+
+## Part A
+
+blah blah blah
+
+<!-- /split -->
+
+## Part B
+
+blah blah blah
+```
+
 ## License
 
 This code is licensed under the MIT License. See the [LICENSE-CODE](LICENSE-CODE) file for more information.

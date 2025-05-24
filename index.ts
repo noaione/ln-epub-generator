@@ -15,7 +15,7 @@ import {
   mdastToHast,
   prettifyHtml,
   prettifyXml,
-  splitContentAtImage,
+  splitMdastContents,
 } from './utils/markdown';
 import { Epub, type DcCreator } from '@smoores/epub';
 import {
@@ -368,7 +368,7 @@ async function processVolume(projectMeta: ProjectMetaSchemaType, volumeNumber: s
       }
       case 'chapter':
       case 'images': {
-        const splitByImages = splitContentAtImage(markdownParsed);
+        const splitByImages = splitMdastContents(markdownParsed);
 
         for (let i = 0; i < splitByImages.length; i++) {
           const split = splitByImages[i]!;
