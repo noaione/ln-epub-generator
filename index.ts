@@ -77,7 +77,7 @@ function metaRoleToEpubRole(role: ProjectMetaSchemaType['teams'][number]['role']
     case 'designer':
       return 'bkd';
     case 'quality-checker':
-      return 'qck';
+      return 'rev';
   }
 }
 
